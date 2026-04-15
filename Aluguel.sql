@@ -1,4 +1,4 @@
-CREATE TABLE Cliente(
+senaclin_gabryelCREATE TABLE Cliente(
 idCliente INT PRIMARY KEY AUTO_INCREMENT,
 nomeCliente VARCHAR(50) NOT NULL,
 cpf CHAR(11) NOT NULL UNIQUE 

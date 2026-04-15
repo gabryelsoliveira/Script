@@ -1,135 +1,92 @@
-CREATE TABLE paciente(
-idPaciente INT PRIMARY KEY AUTO_INCREMENT,
-nome VARCHAR(100) NOT NULL, 
-email VARCHAR(100) NOT NULL,
-celular CHAR(11) NOT NULL,
-cpf CHAR(11) NOT NULL UNIQUE,
-cep CHAR(8) NOT NULL,
-tipoLog VARCHAR(50) NOT NULL,
-logradouro VARCHAR(100) NOT NULL, 
-numero VARCHAR(6) NOT NULL,
-complemento VARCHAR(10),
-cidade VARCHAR(100) NOT NULL,
-uf CHAR(2) NOT NULL,
-dataNascimento DATETIME NOT NULL,  
-CONSTRAINT ch_uf CHECK (uf IN ('AC', 'AL', 'AP', 
-'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 
-'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 
-'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'))
-);
+/*Inserir*/
+INSERT INTO paciente 
+(nome, email, celular, cpf, 
+cep, tipolog,logradouro, 
+numero, complemento, 
+cidade, uf, dataNascimento)
+VALUES 
+('Maria','maria@ig.com.br',
+'13999887744','2226668899',
+'11030222','Praça',
+'Julio Peres','20',NULL,
+'Santos','SP',
+'1970-01-07');
  
-CREATE TABLE especialidade (
-idEspecialidade INT PRIMARY KEY AUTO_INCREMENT,
-nomeEspecialidade VARCHAR(100) NOT NULL 
-);
+INSERT INTO paciente 
+(nome, email, celular, cpf, 
+cep, tipolog,logradouro, 
+numero, complemento, 
+cidade, uf, dataNascimento)
+VALUES 
+('Lucas','lucas@ig.com.br',
+'11999887744','2226668888',
+'11030111','Avenida',
+'Paulista','1900','ap 65',
+'São Paulo','SP',
+'1980-07-22'),
+('Renan','renan@ig.com.br',
+'11999887711','9876668888',
+'41030111','Avenida',
+'Rebouças','101','ap 122',
+'São Paulo','SP',
+'1983-09-02'),
+('Rebeca','rebeca@bol.com.br',
+'11999887711','9876668000',
+'45030111','Rua',
+'Ricardo Marcarenhas','89','ap 12',
+'São Paulo','SP',
+'1992-11-15');
+/*Atualizar*/   
+UPDATE paciente
+SET uf='SP',
+    dataNascimento='1992-11-17'
+WHERE idPaciente=1
+/*Excluir*/   
+DELETE FROM paciente WHERE idPaciente=1
  
-CREATE TABLE medico (
-idMedico INT AUTO_INCREMENT,
-idEspecialidade INT NOT NULL,
-nome VARCHAR(100) NOT NULL, 
-crm VARCHAR(6) NOT NULL UNIQUE,
-CONSTRAINT pk_medico PRIMARY KEY (idMedico),
-CONSTRAINT fk_medicoEspecialidade FOREIGN KEY 
-(idEspecialidade)
-REFERENCES especialidade(idEspecialidade)
-);
+SELECT * FROM paciente
+SELECT NOW()
  
-CREATE TABLE contatoMedico(
-idContatoMedico INT PRIMARY KEY AUTO_INCREMENT,
-idMedico INT NOT NULL, 
-tipoContato VARCHAR(50),
-contato VARCHAR(100),
-CONSTRAINT ch_tipoContato CHECK (tipoContato IN 
-('e-mail','cel','tel')),
-CONSTRAINT fk_contatoMedicoMedico FOREIGN KEY 
-(idMedico) REFERENCES medico(idMedico)
-);
-CREATE TABLE Recepcionista (
-idRecepcionista INT PRIMARY KEY AUTO_INCREMENT,
-nome VARCHAR(100) NOT NULL,
-telefone VARCHAR(20),
-celular VARCHAR(20) NOT NULL,
-cep CHAR(8) NOT NULL,
-tipoLog VARCHAR(50) NOT NULL,
-logradouro VARCHAR(100) NOT NULL,
-numero VARCHAR(10) NOT NULL,
-complemento VARCHAR(50),
-cidade VARCHAR(50) NOT NULL,
-uf CHAR(2) NOT NULL,
-login VARCHAR(100) NOT NULL UNIQUE, 
-senha VARCHAR(255) NOT NULL,
-CONSTRAINT ch_uf CHECK (uf IN ('AC', 'AL', 'AP', 
-'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 
-'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 
-'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'))
-);
+/*Buscas e Filtros*/
+SELECT nome, email FROM paciente
+SELECT * FROM paciente
  
-senaclin_gabryel
+SELECT * FROM paciente
+WHERE cidade='Santos'
+
+SELECT nome, email, celular FROM paciente
+WHERE tipoLog = '-Avenida'
+
+SELECT nome, email, celular, tipolog FROM paciente
+WHERE tipolog='Avenida' OR tipolog='Av' OR tipolog='Av.'
+
+SELECT nome, email, celular, tipolog FROM paciente
+WHERE tipolog LIKE 'Av%'
+
+SELECT nome, cidade, uf FROM paciente
+WHERE cidade LIKE '%u%'
+
+SELECT nome, email, uf FROM paciente
+WHERE cidade IN ('Cubatão', 'Santos')
+
+/*Ordenar dados*/
+SELECT nome, cidade, dataNascimento FROM paciente
+ORDER BY dataNascimento ASC
+
  
-CREATE TABLE planoSaude(
-idPlanoSaude INT PRIMARY KEY AUTO_INCREMENT,
-nomePlanoSaude VARCHAR(100) NOT NULL
-);
+
+SELECT nome, cidade FROM paciente
+ORDER BY nome DESC
+
  
-CREATE TABLE consultaplano  (
-idconsultaPlano INT PRIMARY KEY AUTO_INCREMENT,
-idconsulta INT NOT NULL,
-idPlanoSaude INT NOT NULL,
-CONSTRAINT fk_ConsultaPlano_Consulta FOREIGN KEY 
-(idconsulta) REFERENCES consulta(idconsulta),
-CONSTRAINT fk_ConsultaPlano_PlanoSaude FOREIGN KEY 
-(idPlanoSaude) REFERENCES planosaude(idPlanoSaude)
-)
+
+/*Filtrar e ordenar*/
+SELECT nome, cidade, uf, celular FROM paciente 
+WHERE cidade='São Paulo'
+ORDER BY nome ASC
+
  
-CREATE TABLE categoriaPlano(
-idCategoriaPlano INT PRIMARY KEY AUTO_INCREMENT,
-idPlanoSaude INT NOT NULL,
-nomeCategoriaPlano VARCHAR(100) NOT NULL,
-FOREIGN KEY (idPlanoSaude) 
-REFERENCES PlanoSaude(idPlanoSaude) #chamando outra tabela (REFERENCIA)
-);
- 
-CREATE TABLE formaPagamento (
-idFormaPagamento INT PRIMARY KEY AUTO_INCREMENT,
-nomeFormaPagamento VARCHAR(100) NOT NULL
-);
- 
-CREATE TABLE ConsultaFormaPagamento (
-idConsultaFormaPagamento INT PRIMARY KEY AUTO_INCREMENT,
-idConsulta INT NOT NULL,
-idFormaPagamento INT NOT NULL,
-valor DECIMAL(10,2) NOT NULL,
-qtdVezes INT,
-CONSTRAINT fk_ConsultaFormaPagamento_Consulta 
-FOREIGN KEY (idConsulta) REFERENCES consulta(idconsulta),
-CONSTRAINT fk_ConsultaFormaPagamento_FormaPagamento 
-FOREIGN KEY (idFormaPagamento) 
-REFERENCES formapagamento(idFormaPagamento)
-);
- 
-CREATE TABLE exame (
-idExame INT PRIMARY KEY AUTO_INCREMENT,
-idConsulta INT NOT NULL, 
-tipoExame VARCHAR(100) NOT NULL,
-valor DECIMAL (10,2),
-dataHoraExame DATETIME NOT NULL,
-resultado TEXT,
-dataResultado DATETIME,
-dataRetirada DATETIME, 
-CONSTRAINT fk_exame_consulta 
-FOREIGN KEY (idConsulta) 
-REFERENCES consulta(idconsulta)
-)
- 
- 
-CREATE TABLE ExameFormaPagamento ( 
-idExameFormaPagamento INT PRIMARY KEY AUTO_INCREMENT,
-idExame INT NOT NULL,
-idFormaPagamento INT NOT NULL,
-valor DECIMAL(10,2) NOT NULL,
-qtdVezes INT NOT NULL,
-FOREIGN KEY (idExame) 
-REFERENCES Exame(idExame), 
-FOREIGN KEY (idFormaPagamento) 
-REFERENCES FormaPagamento(idFormaPagamento)
-);
+
+/*Listar os distintos*/
+SELECT distinct cidade FROM paciente
+
