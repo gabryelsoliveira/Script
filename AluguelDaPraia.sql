@@ -1,3 +1,56 @@
+CREATE TABLE Funcionario(
+    idFuncionario int PRIMARY KEY AUTO_INCREMENT,
+    nomeFuncionario varchar(50) not null,
+    cpf char(11) not NULL unique,
+    celular char(11) not null
+);
+
+CREATE TABLE Cliente(
+idCliente INT PRIMARY KEY AUTO_INCREMENT,
+nomeCliente VARCHAR(50) NOT NULL,
+cpf CHAR(11) NOT NULL unique
+);
+ 
+CREATE TABLE Equipamento(
+idEquipamento INT PRIMARY KEY AUTO_INCREMENT,
+nomeEquipamento VARCHAR(50) NOT NULL UNIQUE,  
+qtd INT NOT NULL,
+valorHora DECIMAL(10,2) NOT NULL
+);
+ 
+CREATE TABLE Aluguel (
+idAluguel INT AUTO_INCREMENT PRIMARY KEY,
+idCliente INT NOT NULL,
+idFuncionario INT NOT NULL,
+dataHoraRetirada DATETIME DEFAULT NOW(),
+dataHoraDevolucao DATETIME,
+valorApagar DECIMAL(10,2),
+valorPago DECIMAL(10,2),
+pago BIT,
+formaPagamento VARCHAR(50),
+qtVezes INT DEFAULT 1,
+CONSTRAINT FK_Aluguel_Cliente 
+FOREIGN KEY (idCliente) REFERENCES Cliente(idCliente),
+CONSTRAINT FK_Aluguel_Funcionario 
+FOREIGN KEY (idFuncionario) REFERENCES funcionario
+(idFuncionario) 
+);
+ 
+CREATE TABLE AluguelEquipamento(
+idAluguelEquipamento INT PRIMARY KEY AUTO_INCREMENT,
+idEquipamento INT NOT NULL,
+idAluguel INT NOT NULL,
+valorItem DECIMAL(10,2) NOT NULL,
+valorUnitario DECIMAL(10,2) NOT NULL,
+qtd INT DEFAULT 1,
+FOREIGN KEY (idEquipamento) 
+REFERENCES equipamento(idEquipamento),
+FOREIGN KEY (idAluguel) 
+REFERENCES aluguel(idAluguel)
+);
+
+SELECT * FROM funcionario
+
 /*1*/
 alter table cliente add COLUMN 
 email varchar(150) unique not NULL;
@@ -162,3 +215,105 @@ INSERT INTO aluguel
 
 SELECT * FROM cliente
 SELECT * FROM aluguel
+SELECT * FROM funcionario
+SELECT * FROM equipamento
+SELECT * FROM aluguelequipamento
+
+SELECT * FROM aluguel 9
+SELECT * FROM funcionario
+SELECT * FROM cliente 1 e 9
+SELECT * FROM equipamento 5
+ 
+INSERT INTO aluguel
+(idCliente, idFuncionario,dataHoraRetirada)
+VALUES(1, 3, '2026-04-27');
+ 
+ 
+INSERT INTO aluguelequipamento
+(idEquipamento, idAluguel, valorItem, valorUnitario, qtd)
+VALUES(5, 6, 1.50, 1.50, 1);
+UPDATE equipamento SET qtd = qtd - 1
+WHERE idEquipamento = 5;
+ 
+INSERT INTO aluguel
+(idCliente, idFuncionario,dataHoraRetirada)
+VALUES(9, 3, '2026-04-27');
+ 
+INSERT INTO aluguelequipamento
+(idEquipamento, idAluguel, valorItem, valorUnitario, qtd)
+VALUES(5, 7, 1.50, 1.50, 1);
+UPDATE equipamento SET qtd = qtd - 1
+WHERE idEquipamento = 5;
+ 
+-- EX 2
+ 
+INSERT INTO aluguel
+(idCliente, idFuncionario,dataHoraRetirada)
+VALUES(7, 2, '2025-11-20');
+ 
+INSERT INTO aluguelequipamento
+(idEquipamento, idAluguel, valorItem, valorUnitario, qtd)
+VALUES(5, 8, 1.50, 1.50, 1);
+UPDATE equipamento SET qtd = qtd - 1
+WHERE idEquipamento = 5;
+ 
+-- EX 3
+ 
+INSERT INTO aluguel
+(idCliente, idFuncionario,dataHoraRetirada)
+VALUES(8, 2, '2025-12-29');
+ 
+INSERT INTO aluguelequipamento
+(idEquipamento, idAluguel, valorItem, valorUnitario, qtd)
+VALUES(3, 9, 2.0, 2.0, 1);
+UPDATE equipamento SET qtd = qtd - 1
+WHERE idEquipamento = 3;
+ 
+INSERT INTO aluguelequipamento
+(idEquipamento, idAluguel, valorItem, valorUnitario, qtd)
+VALUES(1, 9, 2.0, 2.0, 2);
+UPDATE equipamento SET qtd = qtd - 2
+WHERE idEquipamento = 1;
+ 
+INSERT INTO aluguelequipamento
+(idEquipamento, idAluguel, valorItem, valorUnitario, qtd)
+VALUES(5, 9, 1.50, 1.50, 1);
+UPDATE equipamento SET qtd = qtd - 1
+WHERE idEquipamento = 5;
+ 
+-- EX 4
+SELECT nomeCliente, email FROM Cliente
+WHERE cidade = 'Santos'
+ORDER BY nomeCliente ASC;
+ 
+-- EX 5
+ 
+ 
+SELECT * FROM cliente
+WHERE estado in ('SP', 'RJ', 'ES', 'MG');
+
+
+-- EX 6
+
+SELECT * FROM cliente
+WHERE idcliente >=5 AND idcliente <=10;
+
+-- EX 7
+SELECT * FROM equipamento
+order by qtd DESC;
+
+-- EX 8
+SELECT * FROM aluguel
+order by dataHoraRetirada DESC;
+
+-- EX 9
+UPDATE equipamento 
+SET valorHora = valorHora * 0.90
+WHERE idEquipamento = '1'
+
+UPDATE equipamento 
+SET valorHora = valorHora * 0.90
+WHERE idEquipamento = '2'
+
+-- EX 10
+SELECT distinct cidade FROM cliente
