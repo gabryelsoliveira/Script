@@ -1,4 +1,4 @@
-/*1*/
+senaclin/*1*/
 alter table cliente add COLUMN 
 email varchar(150) unique not NULL;
 alter table cliente add COLUMN 
